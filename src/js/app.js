@@ -108,8 +108,12 @@ async function fetchAllLotteries() {
         .filter(result => result.status === 'fulfilled' && result.value)
         .map(result => result.value);
 
-    // Ordenar por número de concurso (mais recente primeiro)
-    lotteriesData.sort((a, b) => b.concurso - a.concurso);
+    // Ordenar por maior acumulação/prêmio estimado primeiro
+    lotteriesData.sort((a, b) => {
+        const valorA = a.valorEstimadoProximoConcurso || 0;
+        const valorB = b.valorEstimadoProximoConcurso || 0;
+        return valorB - valorA;
+    });
 
     loading.classList.add('hidden');
 
@@ -211,37 +215,45 @@ function createLotteryCard(lottery, index) {
         ? '<span class="status-accumulated">ACUMULOU</span>'
         : '<span class="status-has-winner">TEM GANHADOR</span>';
 
-    // Criar HTML das premiações (discreto)
+    // Criar HTML das premiações (destacado)
     let premiacoesHTML = '';
     if (lottery.premiacoes && lottery.premiacoes.length > 0) {
         const mainPrize = lottery.premiacoes[0];
 
         if (mainPrize.ganhadores > 0 && mainPrize.valorPremio) {
             premiacoesHTML = `
-                <div class="mt-4 p-3 bg-ice-white rounded-lg">
-                    <div class="text-xs font-semibold text-gray-600 mb-2">Premiação Principal:</div>
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-700">${mainPrize.descricao}</span>
-                        <span class="font-bold text-ocean-blue">${mainPrize.ganhadores} ${mainPrize.ganhadores === 1 ? 'ganhador' : 'ganhadores'}</span>
+                <div class="mt-4 p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-200">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-2xl">🏆</span>
+                        <div class="text-sm font-bold text-gray-700">${mainPrize.descricao}</div>
                     </div>
-                    <div class="mt-1 text-sm text-gray-600">
-                        ${formatCurrency(mainPrize.valorPremio)} ${mainPrize.ganhadores === 1 ? '' : 'cada'}
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-gray-600 text-sm">Ganhadores:</span>
+                        <span class="font-bold text-lg text-ocean-blue">${mainPrize.ganhadores}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-600 text-sm">Prêmio ${mainPrize.ganhadores === 1 ? 'total' : 'por ganhador'}:</span>
+                        <span class="font-bold text-xl text-green-700">${formatCurrency(mainPrize.valorPremio)}</span>
                     </div>
                 </div>
             `;
         }
 
-        // Adicionar outras faixas de premiação (muito discreto)
+        // Adicionar outras faixas de premiação
         if (lottery.premiacoes.length > 1) {
-            const otherPrizes = lottery.premiacoes.slice(1, 3).filter(p => p.ganhadores > 0);
+            const otherPrizes = lottery.premiacoes.slice(1, 4).filter(p => p.ganhadores > 0);
 
             if (otherPrizes.length > 0) {
                 premiacoesHTML += `
-                    <div class="mt-2 space-y-1">
+                    <div class="mt-3 p-3 bg-gray-50 rounded-lg space-y-2">
+                        <div class="text-xs font-semibold text-gray-500 mb-2">Outras Premiações:</div>
                         ${otherPrizes.map(prize => `
-                            <div class="flex justify-between items-center text-xs text-gray-600">
-                                <span>${prize.descricao}:</span>
-                                <span>${prize.ganhadores} ganhador${prize.ganhadores !== 1 ? 'es' : ''} - ${formatCurrency(prize.valorPremio)}</span>
+                            <div class="flex items-center justify-between text-sm py-2 border-b border-gray-200 last:border-0">
+                                <div class="flex-1">
+                                    <div class="font-medium text-gray-700">${prize.descricao}</div>
+                                    <div class="text-xs text-gray-500">${prize.ganhadores} ganhador${prize.ganhadores !== 1 ? 'es' : ''}</div>
+                                </div>
+                                <div class="font-bold text-sky-blue text-right">${formatCurrency(prize.valorPremio)}</div>
                             </div>
                         `).join('')}
                     </div>
