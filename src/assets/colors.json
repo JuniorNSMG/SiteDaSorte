@@ -1,0 +1,37 @@
+{
+  "palette": {
+    "darkNavy": "#1E293D",
+    "oceanBlue": "#006494",
+    "skyBlue": "#247BA0",
+    "lightBlue": "#1B98E0",
+    "iceWhite": "#E8F1F2"
+  },
+  "neutral": {
+    "white": "#FFFFFF",
+    "lightGray": "#F5F5F5",
+    "mediumGray": "#9CA3AF",
+    "darkGray": "#374151",
+    "black": "#000000"
+  },
+  "usage": {
+    "backgrounds": {
+      "primary": "#E8F1F2",
+      "secondary": "#FFFFFF",
+      "header": "#1E293D",
+      "footer": "#1E293D"
+    },
+    "text": {
+      "primary": "#374151",
+      "secondary": "#9CA3AF",
+      "onDark": "#FFFFFF",
+      "heading": "#1E293D"
+    },
+    "interactive": {
+      "button": "#006494",
+      "buttonHover": "#247BA0",
+      "buttonActive": "#1B98E0",
+      "link": "#247BA0",
+      "linkHover": "#1B98E0"
+    }
+  }
+}

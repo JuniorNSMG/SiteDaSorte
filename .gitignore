@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+loterias-api/
+ui-ux-pro-max-skill/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Build
+dist/
+build/
+
+# Temporary
+tmp/
+temp/

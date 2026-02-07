@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Acompanhe os resultados das loterias da CAIXA em tempo real">
+    <meta name="theme-color" content="#1E293D">
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.svg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Site da Sorte">
+
+    <title>Site da Sorte - Resultados das Loterias CAIXA</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-navy': '#1E293D',
+                        'ocean-blue': '#006494',
+                        'sky-blue': '#247BA0',
+                        'light-blue': '#1B98E0',
+                        'ice-white': '#E8F1F2',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="/src/css/styles.css">
+</head>
+<body class="bg-ice-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-dark-navy text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 md:py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-8 h-8 md:w-10 md:h-10 text-light-blue" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/>
+                    </svg>
+                    <h1 class="text-xl md:text-2xl font-bold">Site da Sorte</h1>
+                </div>
+                <button id="installButton" class="hidden bg-light-blue hover:bg-sky-blue px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                    Instalar App
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 md:py-8">
+        <!-- Loading State -->
+        <div id="loading" class="flex justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-ocean-blue"></div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error" class="hidden bg-white rounded-lg shadow-md p-6 text-center">
+            <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">Erro ao carregar resultados</h2>
+            <p class="text-gray-600 mb-4">Não foi possível conectar à API das loterias.</p>
+            <button onclick="location.reload()" class="bg-ocean-blue hover:bg-sky-blue text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200">
+                Tentar Novamente
+            </button>
+        </div>
+
+        <!-- Lottery Results -->
+        <div id="results" class="hidden space-y-6">
+            <!-- Results will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-navy text-ice-white mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Sobre</h3>
+                    <p class="text-sm opacity-90">
+                        Aplicativo para consulta de resultados das loterias da CAIXA.
+                        Dados fornecidos pela API não-oficial Loterias CAIXA.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Referências</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>
+                            <a href="https://github.com/guto-alves/loterias-api" target="_blank" rel="noopener noreferrer" class="text-sky-blue hover:text-light-blue transition-colors duration-200">
+                                API: Loterias CAIXA
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener noreferrer" class="text-sky-blue hover:text-light-blue transition-colors duration-200">
+                                Design: UI/UX Pro Max
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://loterias.caixa.gov.br" target="_blank" rel="noopener noreferrer" class="text-sky-blue hover:text-light-blue transition-colors duration-200">
+                                Loterias CAIXA Oficial
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-sm opacity-75">
+                <p>&copy; 2024 Site da Sorte. Desenvolvido com UI/UX Pro Max Skill.</p>
+                <p class="mt-2">Este site não é afiliado à CAIXA Econômica Federal.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/src/js/app.js"></script>
+    <script src="/src/js/sw-register.js"></script>
+</body>
+</html>

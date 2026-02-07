@@ -1,0 +1,17 @@
+<svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="72" height="72" fill="#1E293D" rx="9"/>
+
+  <!-- Circle -->
+  <circle cx="36" cy="36" r="27" fill="#1B98E0"/>
+
+  <!-- Dollar symbol -->
+  <text
+    x="36"
+    y="45"
+    font-size="36"
+    fill="#FFFFFF"
+    text-anchor="middle"
+    font-family="Arial, sans-serif"
+    font-weight="bold">$</text>
+</svg>
