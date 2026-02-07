@@ -177,6 +177,9 @@ importar_do_github() {
     if $USE_JQ; then
         # Modo rápido com jq
         while IFS=$'\t' read -r numero dezenas; do
+            # Pular linhas vazias
+            [[ -z "$numero" ]] && continue
+
             # Verificar se já existe
             if echo "$existing" | grep -q "^${numero}$"; then
                 continue
@@ -193,13 +196,17 @@ importar_do_github() {
             if (( batch_count >= 100 )); then
                 batch_array+="]"
 
-                curl -s -X POST \
+                response=$(curl -s -X POST \
                     "${SUPABASE_URL}/rest/v1/loterias" \
                     -H "apikey: ${SUPABASE_KEY}" \
                     -H "Authorization: Bearer ${SUPABASE_KEY}" \
                     -H "Content-Type: application/json" \
                     -H "Prefer: resolution=merge-duplicates,return=minimal" \
-                    -d "$batch_array" > /dev/null 2>&1
+                    -d "$batch_array" 2>&1)
+
+                if [[ $? -ne 0 ]] || echo "$response" | grep -q "error"; then
+                    echo -e "\n   ${RED}❌ Erro ao salvar batch: $response${NC}"
+                fi
 
                 importados=$((importados + batch_count))
                 printf "\r   💾 Salvando no Supabase: %d concursos   " "$importados"
@@ -229,13 +236,17 @@ importar_do_github() {
                 if (( batch_count >= 100 )); then
                     batch_array+="]"
 
-                    curl -s -X POST \
+                    response=$(curl -s -X POST \
                         "${SUPABASE_URL}/rest/v1/loterias" \
                         -H "apikey: ${SUPABASE_KEY}" \
                         -H "Authorization: Bearer ${SUPABASE_KEY}" \
                         -H "Content-Type: application/json" \
                         -H "Prefer: resolution=merge-duplicates,return=minimal" \
-                        -d "$batch_array" > /dev/null 2>&1
+                        -d "$batch_array" 2>&1)
+
+                    if [[ $? -ne 0 ]] || echo "$response" | grep -q "error"; then
+                        echo -e "\n   ${RED}❌ Erro ao salvar batch: $response${NC}"
+                    fi
 
                     importados=$((importados + batch_count))
                     printf "\r   💾 Salvando no Supabase: %d concursos   " "$importados"
@@ -251,13 +262,17 @@ importar_do_github() {
     if (( batch_count > 0 )); then
         batch_array+="]"
 
-        curl -s -X POST \
+        response=$(curl -s -X POST \
             "${SUPABASE_URL}/rest/v1/loterias" \
             -H "apikey: ${SUPABASE_KEY}" \
             -H "Authorization: Bearer ${SUPABASE_KEY}" \
             -H "Content-Type: application/json" \
             -H "Prefer: resolution=merge-duplicates,return=minimal" \
-            -d "$batch_array" > /dev/null 2>&1
+            -d "$batch_array" 2>&1)
+
+        if [[ $? -ne 0 ]] || echo "$response" | grep -q "error"; then
+            echo -e "\n   ${RED}❌ Erro ao salvar último batch: $response${NC}"
+        fi
 
         importados=$((importados + batch_count))
     fi
