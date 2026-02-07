@@ -8,8 +8,8 @@ ui-ux-pro-max-skill/
 .env.local
 .env.*.local
 
-# Supabase Config (contém credenciais)
-config/supabase-config.js
+# Supabase Config - A anon key é pública, pode commitar
+# config/supabase-config.js
 
 # Editor
 .vscode/
