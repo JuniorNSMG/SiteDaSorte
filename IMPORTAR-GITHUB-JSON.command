@@ -130,8 +130,8 @@ importar_do_github() {
     local loteria_id="$1"
     local loteria_nome="$2"
 
-    # Debug: verificar parâmetros recebidos
-    echo "DEBUG: loteria_id='$loteria_id', loteria_nome='$loteria_nome'"
+    # Debug: verificar parâmetros recebidos (descomente para debugar)
+    # echo "DEBUG: loteria_id='$loteria_id', loteria_nome='$loteria_nome'"
 
     echo -e "\n${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BLUE}║ 📥 Importando ${loteria_nome} do GitHub JSON${NC}"
