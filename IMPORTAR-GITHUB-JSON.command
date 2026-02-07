@@ -124,11 +124,14 @@ enriquecer_concurso() {
 
 # Função para importar loteria do GitHub
 importar_do_github() {
-    local loteria_id=$1
-    local loteria_nome=$2
+    local loteria_id="$1"
+    local loteria_nome="$2"
+
+    # Debug: verificar parâmetros recebidos
+    echo "DEBUG: loteria_id='$loteria_id', loteria_nome='$loteria_nome'"
 
     echo -e "\n${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║ 📥 Importando $loteria_nome do GitHub JSON${NC}"
+    echo -e "${BLUE}║ 📥 Importando ${loteria_nome} do GitHub JSON${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}"
 
     # Baixar JSON do GitHub
@@ -189,7 +192,7 @@ importar_do_github() {
                 batch_array+=","
             fi
 
-            batch_array+="{\"tipo_loteria\":\"$loteria_id\",\"numero_concurso\":$numero,\"dezenas\":$dezenas}"
+            batch_array+="{\"tipo_loteria\":\"${loteria_id}\",\"numero_concurso\":${numero},\"dezenas\":${dezenas}}"
             batch_count=$((batch_count + 1))
 
             # Salvar batch quando atingir 100
@@ -230,7 +233,7 @@ importar_do_github() {
                     batch_array+=","
                 fi
 
-                batch_array+="{\"tipo_loteria\":\"$loteria_id\",\"numero_concurso\":$numero,\"dezenas\":$dezenas}"
+                batch_array+="{\"tipo_loteria\":\"${loteria_id}\",\"numero_concurso\":${numero},\"dezenas\":${dezenas}}"
                 batch_count=$((batch_count + 1))
 
                 if (( batch_count >= 100 )); then
