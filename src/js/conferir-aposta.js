@@ -467,6 +467,12 @@ class ConferirAposta {
     async conferirAposta() {
         const config = LOTERIAS_CONFIG[this.loteriaAtual];
 
+        // Verificar se Supabase está configurado
+        if (!window.SUPABASE_CONFIG || !window.SUPABASE_CONFIG.url) {
+            alert('⚠️ Supabase não configurado!\n\nPara usar esta funcionalidade:\n1. Abra o site pelo GitHub Pages:\n   https://juniorNSMG.github.io/SiteDaSorte/\n\nOu configure o Supabase localmente.');
+            return;
+        }
+
         // Mostrar loading
         document.getElementById('loadingConferencia').classList.remove('hidden');
         document.getElementById('resultados').classList.add('hidden');
