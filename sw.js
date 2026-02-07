@@ -4,13 +4,13 @@ const CACHE_NAME = 'site-da-sorte-v1';
 const API_CACHE = 'site-da-sorte-api-v1';
 
 const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/src/css/styles.css',
-    '/src/js/app.js',
-    '/src/js/sw-register.js',
-    '/manifest.json',
-    '/src/assets/colors.json'
+    './',
+    './index.html',
+    './src/css/styles.css',
+    './src/js/app.js',
+    './src/js/sw-register.js',
+    './manifest.json',
+    './src/assets/colors.json'
 ];
 
 // Install event - cache static assets
@@ -82,7 +82,7 @@ self.addEventListener('fetch', (event) => {
             })
             .catch(() => {
                 // Return offline page if available
-                return caches.match('/index.html');
+                return caches.match('./index.html');
             })
     );
 });
