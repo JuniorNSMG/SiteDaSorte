@@ -47,12 +47,15 @@
                     </svg>
                     <h1 class="text-xl md:text-2xl font-bold">Site da Sorte</h1>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button id="importHistoryButton" class="hidden bg-sky-blue hover:bg-light-blue px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm">
-                        📚 Importar Histórico
+                <div class="flex items-center gap-2 md:gap-3 flex-wrap">
+                    <button id="btnConferirAposta" class="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 px-3 md:px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm md:text-base shadow-lg">
+                        🎯 Conferir Aposta
                     </button>
-                    <button id="installButton" class="hidden bg-light-blue hover:bg-sky-blue px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                        Instalar App
+                    <button id="importHistoryButton" class="hidden bg-sky-blue hover:bg-light-blue px-3 md:px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm">
+                        📚 Histórico
+                    </button>
+                    <button id="installButton" class="hidden bg-light-blue hover:bg-sky-blue px-3 md:px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm md:text-base">
+                        Instalar
                     </button>
                 </div>
             </div>
@@ -131,6 +134,7 @@
     <script src="./src/js/supabase.js"></script>
     <script src="./src/js/sync.js"></script>
     <script src="./src/js/import-history.js"></script>
+    <script src="./src/js/conferir-aposta.js"></script>
     <script src="./src/js/app.js"></script>
     <script src="./src/js/sw-register.js"></script>
 
