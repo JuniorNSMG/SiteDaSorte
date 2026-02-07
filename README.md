@@ -4,6 +4,13 @@ Progressive Web App (PWA) para consulta de resultados das Loterias CAIXA em temp
 
 ![Color Palette](docs/palette.png)
 
+## 🔗 Links Rápidos
+
+- 📖 **[Instruções de Deploy](DEPLOY_INSTRUCTIONS.md)** - Como publicar no GitHub Pages
+- ⚙️ **[Git Manager](GIT_MANAGER_GUIDE.md)** - Script interativo para operações Git
+- 🎨 **[Design System](DESIGN_SYSTEM.md)** - Documentação completa do design
+- ⚡ **[Quick Start](QUICK_START.md)** - Guia rápido para começar
+
 ## 📋 Sobre o Projeto
 
 Site da Sorte é uma aplicação web moderna e responsiva que permite aos usuários acompanhar os resultados mais recentes das principais loterias da CAIXA Econômica Federal do Brasil.
