@@ -1,5 +1,28 @@
 # Regras do Projeto - Site da Sorte
 
+## 🚨 REGRA CRÍTICA #1 - SEMPRE FAZER COMMIT
+
+### ⚠️ OBRIGATÓRIO EM TODA MUDANÇA:
+```
+1. Faça a modificação no código
+2. git add -A
+3. git commit -m "mensagem em português"
+4. git push -u origin claude/add-design-system-joUB0
+```
+
+### ❌ NUNCA:
+- Deixar arquivos modificados sem commit
+- Esquecer de fazer push após commit
+- Fazer múltiplas mudanças sem commits intermediários
+
+### ✅ SEMPRE:
+- Commit imediatamente após cada funcionalidade
+- Push após cada commit
+- Commits pequenos e frequentes
+- Mensagens descritivas em português
+
+---
+
 ## 📋 Regras Gerais
 
 ### Idioma
