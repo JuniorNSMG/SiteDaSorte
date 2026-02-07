@@ -131,7 +131,16 @@ async function manualSync() {
 
 // Carregar dados do Supabase (mais rápido que API)
 async function loadFromSupabase() {
+    const loading = document.getElementById('loading');
+    const results = document.getElementById('results');
+    const error = document.getElementById('error');
+
     try {
+        // Mostrar loading
+        if (loading) loading.classList.remove('hidden');
+        if (results) results.classList.add('hidden');
+        if (error) error.classList.add('hidden');
+
         const dados = await getTodosUltimosResultados();
 
         if (!dados || dados.length === 0) {
@@ -155,11 +164,19 @@ async function loadFromSupabase() {
         // Ordenar por concurso
         lotteriesData.sort((a, b) => b.concurso - a.concurso);
 
+        // Esconder loading e mostrar resultados
+        if (loading) loading.classList.add('hidden');
+        if (results) results.classList.remove('hidden');
+
         renderLotteries();
         console.log('✅ Dados carregados do Supabase');
         return true;
     } catch (error) {
         console.error('Erro ao carregar do Supabase:', error);
+
+        // Esconder loading em caso de erro
+        if (loading) loading.classList.add('hidden');
+
         return false;
     }
 }
