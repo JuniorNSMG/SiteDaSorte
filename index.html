@@ -47,9 +47,14 @@
                     </svg>
                     <h1 class="text-xl md:text-2xl font-bold">Site da Sorte</h1>
                 </div>
-                <button id="installButton" class="hidden bg-light-blue hover:bg-sky-blue px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                    Instalar App
-                </button>
+                <div class="flex items-center gap-3">
+                    <button id="importHistoryButton" class="hidden bg-sky-blue hover:bg-light-blue px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm">
+                        📚 Importar Histórico
+                    </button>
+                    <button id="installButton" class="hidden bg-light-blue hover:bg-sky-blue px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                        Instalar App
+                    </button>
+                </div>
             </div>
         </div>
     </header>
@@ -125,7 +130,28 @@
     <!-- Módulos da aplicação -->
     <script src="./src/js/supabase.js"></script>
     <script src="./src/js/sync.js"></script>
+    <script src="./src/js/import-history.js"></script>
     <script src="./src/js/app.js"></script>
     <script src="./src/js/sw-register.js"></script>
+
+    <!-- Mostrar botão de importar histórico quando Supabase estiver pronto -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aguardar Supabase inicializar
+            setTimeout(() => {
+                if (typeof supabaseReady !== 'undefined' && supabaseReady) {
+                    const importButton = document.getElementById('importHistoryButton');
+                    if (importButton) {
+                        importButton.classList.remove('hidden');
+                        importButton.addEventListener('click', () => {
+                            if (confirm('Deseja importar os últimos 100 concursos de cada loteria?\n\nIsso pode levar alguns minutos.')) {
+                                startHistoricImport();
+                            }
+                        });
+                    }
+                }
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
