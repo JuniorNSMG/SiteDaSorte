@@ -7,6 +7,8 @@ Progressive Web App (PWA) para consulta de resultados das Loterias CAIXA em temp
 ## 🔗 Links Rápidos
 
 - 📖 **[Instruções de Deploy](DEPLOY_INSTRUCTIONS.md)** - Como publicar no GitHub Pages
+- 🗄️ **[Setup Supabase](SETUP_SUPABASE.md)** - Configurar banco de dados
+- 📋 **[Regras do Projeto](REGRAS_PROJETO.md)** - Regras e padrões obrigatórios
 - ⚙️ **[Git Manager](GIT_MANAGER_GUIDE.md)** - Script interativo para operações Git
 - 🎨 **[Design System](DESIGN_SYSTEM.md)** - Documentação completa do design
 - ⚡ **[Quick Start](QUICK_START.md)** - Guia rápido para começar

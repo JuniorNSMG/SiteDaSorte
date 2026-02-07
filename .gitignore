@@ -8,6 +8,9 @@ ui-ux-pro-max-skill/
 .env.local
 .env.*.local
 
+# Supabase Config (contém credenciais)
+config/supabase-config.js
+
 # Editor
 .vscode/
 .idea/

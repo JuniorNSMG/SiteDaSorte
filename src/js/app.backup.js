@@ -1,9 +1,8 @@
-// Site da Sorte - Aplicação Principal
-// Versão com integração Supabase
+// Site da Sorte - Main Application
 
 const API_BASE_URL = 'https://loteriascaixa-api.herokuapp.com/api';
 
-// Configurações das loterias
+// Lottery configurations
 const LOTTERIES = [
     { id: 'megasena', name: 'Mega-Sena', color: '#209869' },
     { id: 'lotofacil', name: 'Lotofácil', color: '#930089' },
@@ -16,55 +15,29 @@ const LOTTERIES = [
     { id: 'maismilionaria', name: '+Milionária', color: '#208068' }
 ];
 
-// Gerenciamento de estado
+// State management
 let lotteriesData = [];
 let isOnline = navigator.onLine;
-let useSupabase = false;
 
-// Inicializar aplicação
-document.addEventListener('DOMContentLoaded', async () => {
-    await initApp();
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    initApp();
     setupEventListeners();
     checkOnlineStatus();
 });
 
 async function initApp() {
     try {
-        // Tentar inicializar Supabase
-        useSupabase = await initSupabase();
-
-        if (useSupabase) {
-            // Carregar do Supabase (mais rápido)
-            const loaded = await loadFromSupabase();
-
-            if (!loaded) {
-                // Fallback para API
-                await fetchAllLotteries();
-            }
-
-            // Iniciar sincronização automática em background
-            startAutoSync();
-        } else {
-            // Apenas API
-            await fetchAllLotteries();
-
-            // Atualizar periodicamente da API
-            setInterval(() => {
-                if (isOnline) {
-                    fetchAllLotteries();
-                }
-            }, 5 * 60 * 1000);
-        }
-
+        await fetchAllLotteries();
         renderLotteries();
     } catch (error) {
-        console.error('Erro ao inicializar aplicação:', error);
+        console.error('Error initializing app:', error);
         showError();
     }
 }
 
 function setupEventListeners() {
-    // Eventos de conectividade
+    // Online/Offline events
     window.addEventListener('online', () => {
         isOnline = true;
         hideOfflineBanner();
@@ -75,12 +48,6 @@ function setupEventListeners() {
         isOnline = false;
         showOfflineBanner();
     });
-
-    // Botão de sincronização manual
-    const syncButton = document.getElementById('syncButton');
-    if (syncButton) {
-        syncButton.addEventListener('click', manualSync);
-    }
 }
 
 function checkOnlineStatus() {
@@ -108,7 +75,7 @@ async function fetchAllLotteries() {
         .filter(result => result.status === 'fulfilled' && result.value)
         .map(result => result.value);
 
-    // Ordenar por número de concurso (mais recente primeiro)
+    // Sort by contest number (most recent first)
     lotteriesData.sort((a, b) => b.concurso - a.concurso);
 
     loading.classList.add('hidden');
@@ -127,19 +94,13 @@ async function fetchLottery(id, name, color) {
         });
 
         if (!response.ok) {
-            throw new Error(`Erro HTTP! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-
-        // Salvar no Supabase se disponível
-        if (useSupabase) {
-            await salvarResultado(id, data);
-        }
-
         return { ...data, lotteryName: name, lotteryColor: color };
     } catch (error) {
-        console.error(`Erro ao buscar ${name}:`, error);
+        console.error(`Error fetching ${name}:`, error);
         return null;
     }
 }
@@ -148,32 +109,20 @@ function renderLotteries() {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
 
-    // Adicionar cabeçalho
+    // Add header
     const header = document.createElement('div');
     header.className = 'mb-8 text-center';
     header.innerHTML = `
-        <div class="flex items-center justify-center gap-4 mb-4">
-            <h2 class="text-2xl md:text-3xl font-bold text-dark-navy">
-                Últimos Resultados
-            </h2>
-            ${useSupabase ? `
-                <button id="syncButton" class="bg-ocean-blue hover:bg-sky-blue text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm">
-                    🔄 Sincronizar
-                </button>
-            ` : ''}
-        </div>
+        <h2 class="text-2xl md:text-3xl font-bold text-dark-navy mb-2">
+            Últimos Resultados
+        </h2>
         <p class="text-gray-600">
             Confira os resultados mais recentes das loterias da CAIXA
         </p>
-        ${useSupabase ? `
-            <p class="text-xs text-gray-500 mt-2">
-                📊 Dados armazenados no Supabase | Sincronização automática a cada 5 minutos
-            </p>
-        ` : ''}
     `;
     resultsContainer.appendChild(header);
 
-    // Criar grid de loterias
+    // Create lottery grid
     const grid = document.createElement('div');
     grid.className = 'lottery-grid';
 
@@ -183,14 +132,6 @@ function renderLotteries() {
     });
 
     resultsContainer.appendChild(grid);
-
-    // Re-adicionar event listener do botão de sync
-    if (useSupabase) {
-        const syncButton = document.getElementById('syncButton');
-        if (syncButton) {
-            syncButton.addEventListener('click', manualSync);
-        }
-    }
 }
 
 function createLotteryCard(lottery, index) {
@@ -207,48 +148,10 @@ function createLotteryCard(lottery, index) {
         ? formatCurrency(lottery.valorEstimadoProximoConcurso)
         : 'A definir';
 
+    const hasWinner = !lottery.acumulou;
     const statusBadge = lottery.acumulou
         ? '<span class="status-accumulated">ACUMULOU</span>'
         : '<span class="status-has-winner">TEM GANHADOR</span>';
-
-    // Criar HTML das premiações (discreto)
-    let premiacoesHTML = '';
-    if (lottery.premiacoes && lottery.premiacoes.length > 0) {
-        const mainPrize = lottery.premiacoes[0];
-
-        if (mainPrize.ganhadores > 0 && mainPrize.valorPremio) {
-            premiacoesHTML = `
-                <div class="mt-4 p-3 bg-ice-white rounded-lg">
-                    <div class="text-xs font-semibold text-gray-600 mb-2">Premiação Principal:</div>
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-gray-700">${mainPrize.descricao}</span>
-                        <span class="font-bold text-ocean-blue">${mainPrize.ganhadores} ${mainPrize.ganhadores === 1 ? 'ganhador' : 'ganhadores'}</span>
-                    </div>
-                    <div class="mt-1 text-sm text-gray-600">
-                        ${formatCurrency(mainPrize.valorPremio)} ${mainPrize.ganhadores === 1 ? '' : 'cada'}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Adicionar outras faixas de premiação (muito discreto)
-        if (lottery.premiacoes.length > 1) {
-            const otherPrizes = lottery.premiacoes.slice(1, 3).filter(p => p.ganhadores > 0);
-
-            if (otherPrizes.length > 0) {
-                premiacoesHTML += `
-                    <div class="mt-2 space-y-1">
-                        ${otherPrizes.map(prize => `
-                            <div class="flex justify-between items-center text-xs text-gray-600">
-                                <span>${prize.descricao}:</span>
-                                <span>${prize.ganhadores} ganhador${prize.ganhadores !== 1 ? 'es' : ''} - ${formatCurrency(prize.valorPremio)}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-        }
-    }
 
     card.innerHTML = `
         <div class="flex items-center justify-between mb-4">
@@ -268,7 +171,18 @@ function createLotteryCard(lottery, index) {
             </div>
         </div>
 
-        ${premiacoesHTML}
+        ${lottery.premiacoes && lottery.premiacoes.length > 0 ? `
+            <div class="mb-6 space-y-2">
+                ${lottery.premiacoes.slice(0, 3).map(prize => `
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-600">${prize.descricao}:</span>
+                        <span class="font-semibold text-gray-800">
+                            ${prize.ganhadores} ganhador${prize.ganhadores !== 1 ? 'es' : ''}
+                        </span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : ''}
 
         <div class="next-draw-card p-4 mt-4">
             <div class="text-sm font-semibold mb-2 opacity-90">Próximo Concurso:</div>
@@ -310,7 +224,7 @@ function showOfflineBanner() {
         banner.className = 'offline-banner';
         banner.innerHTML = `
             <p class="text-sm font-medium">
-                Você está offline. ${useSupabase ? 'Mostrando dados salvos.' : 'Mostrando resultados em cache.'}
+                Você está offline. Mostrando resultados salvos.
             </p>
         `;
         document.body.appendChild(banner);
@@ -326,6 +240,9 @@ function hideOfflineBanner() {
     }
 }
 
-// Exportar para uso global
-window.LOTTERIES = LOTTERIES;
-window.lotteriesData = lotteriesData;
+// Auto-refresh every 5 minutes if online
+setInterval(() => {
+    if (isOnline) {
+        initApp();
+    }
+}, 5 * 60 * 1000);
