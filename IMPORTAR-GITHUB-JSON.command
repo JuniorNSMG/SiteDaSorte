@@ -18,18 +18,21 @@ SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 API_URL="https://loteriascaixa-api.herokuapp.com/api"
 GITHUB_JSON_BASE="https://raw.githubusercontent.com/guilhermeasn/loteria.json/master/data"
 
-# Mapeamento de loterias
-declare -A LOTERIAS=(
-    [megasena]="Mega-Sena"
-    [lotofacil]="Lotofácil"
-    [quina]="Quina"
-    [lotomania]="Lotomania"
-    [timemania]="Timemania"
-    [duplasena]="Dupla Sena"
-    [diadesorte]="Dia de Sorte"
-    [supersete]="Super Sete"
-    [maismilionaria]="+Milionária"
-)
+# Função para obter nome da loteria (compatível com bash 3.2)
+get_loteria_nome() {
+    case "$1" in
+        megasena) echo "Mega-Sena" ;;
+        lotofacil) echo "Lotofácil" ;;
+        quina) echo "Quina" ;;
+        lotomania) echo "Lotomania" ;;
+        timemania) echo "Timemania" ;;
+        duplasena) echo "Dupla Sena" ;;
+        diadesorte) echo "Dia de Sorte" ;;
+        supersete) echo "Super Sete" ;;
+        maismilionaria) echo "+Milionária" ;;
+        *) echo "$1" ;;
+    esac
+}
 
 # Estatísticas
 TOTAL_BAIXADO=0
@@ -360,8 +363,9 @@ fi
 INICIO=$(date +%s)
 
 for loteria_id in "${loterias_para_importar[@]}"; do
-    if [[ -n "${LOTERIAS[$loteria_id]}" ]]; then
-        importar_do_github "$loteria_id" "${LOTERIAS[$loteria_id]}"
+    loteria_nome=$(get_loteria_nome "$loteria_id")
+    if [[ -n "$loteria_nome" ]]; then
+        importar_do_github "$loteria_id" "$loteria_nome"
     fi
 done
 
